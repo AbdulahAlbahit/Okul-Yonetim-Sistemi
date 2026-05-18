@@ -44,18 +44,22 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("Hoca_No");
 
-                    b.ToTable("Ders");
+                    b.ToTable("Dersler");
                 });
 
             modelBuilder.Entity("Domain.Entity.Ogrenci", b =>
                 {
-                    b.Property<int>("Ogrenci_No")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Ogrenci_No"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ogrenci_No")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -82,7 +86,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(1)");
 
-                    b.HasKey("Ogrenci_No");
+                    b.HasKey("Id");
 
                     b.HasIndex("Sinif_Id1");
 
@@ -106,11 +110,22 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TC")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UzmanAlani")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("age")
                         .HasColumnType("int");
 
                     b.Property<string>("email")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("hasPassword")
+                        .HasColumnType("bit");
 
                     b.Property<int>("jobTitle")
                         .HasColumnType("int");

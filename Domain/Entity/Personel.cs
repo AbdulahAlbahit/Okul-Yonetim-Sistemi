@@ -10,13 +10,17 @@ namespace Domain.Entity
         [Key]
        public int PerId  {  get; set; }
         [Required]
+        public string TC { get; set; }
+
+        [Required]
        public string Name { get; set; }
        public string? Gender {  get; set; }
        public string? email { get; set; }
        public int ? age { get; set; }
        public JobTitle jobTitle { get; set; }
 
-
+        public bool hasPassword {  get; set; }=false;
+        public string UzmanAlani { get; set; } 
 
     }
 }

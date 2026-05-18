@@ -1,4 +1,7 @@
 
+using Application;
+using Infrastructure;
+
 namespace WepApi
 {
     public class Program
@@ -12,13 +15,20 @@ namespace WepApi
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddBusinessServices();
+            builder.Services.AddDataAccessServices(builder.Configuration);
+
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
@@ -27,7 +37,7 @@ namespace WepApi
 
 
             app.MapControllers();
-
+           
             app.Run();
         }
     }
