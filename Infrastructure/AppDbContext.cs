@@ -7,16 +7,22 @@ using System.Text;
 
 namespace Infrastructure
 {
-    internal class AppDbContext:DbContext
+    public class AppDbContext:DbContext
     {
+
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
         public DbSet<Personel >   Personels { get; set; }
         public DbSet<Ogrenci >   Ogrenciler { get; set; } 
         public DbSet<Sinav> Sinavlar {  get; set; }
+        public DbSet<Ders>  Dersler {  get; set; }
+        public DbSet<Veli> Veliler { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(SqlCon.con);
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer(SqlCon.con);
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

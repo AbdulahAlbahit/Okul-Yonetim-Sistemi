@@ -11,6 +11,13 @@ namespace Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<string>(
+                name: "TC",
+                table: "Personels",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
+
             migrationBuilder.CreateTable(
                 name: "Ders",
                 columns: table => new
@@ -94,8 +101,9 @@ namespace Infrastructure.Migrations
                 name: "Ogrenciler",
                 columns: table => new
                 {
-                    Ogrenci_No = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Ogrenci_No = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SecondName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     age = table.Column<int>(type: "int", nullable: true),
@@ -107,7 +115,7 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ogrenciler", x => x.Ogrenci_No);
+                    table.PrimaryKey("PK_Ogrenciler", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Ogrenciler_Sinif_Sinif_Id1",
                         column: x => x.Sinif_Id1,
@@ -146,7 +154,7 @@ namespace Infrastructure.Migrations
                         name: "FK_Sinavlar_Ogrenciler_Ogrenci_Id",
                         column: x => x.Ogrenci_Id,
                         principalTable: "Ogrenciler",
-                        principalColumn: "Ogrenci_No",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Sinavlar_Personels_Hoca_Id",
@@ -217,6 +225,10 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Ders");
+
+            migrationBuilder.DropColumn(
+                name: "TC",
+                table: "Personels");
         }
     }
 }

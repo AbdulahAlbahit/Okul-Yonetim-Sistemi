@@ -8,7 +8,8 @@ namespace Domain.Entity
     public class Ogrenci
     {
        [Key]
-       public int Ogrenci_No { get; set; }
+       public int Id { get; set; }
+       public string Ogrenci_No { get; set; }
        public string Name {  get; set; }
         public string SecondName {  get; set; }
         public int? age {  get; set; }
