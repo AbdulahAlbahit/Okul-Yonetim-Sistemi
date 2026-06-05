@@ -55,12 +55,12 @@ namespace WepApi.Controllers
 
         [HttpPost]
         [Route("")]
-        public async Task<ActionResult<DersDetailDto>> AddDersAsync(CreateAndUpdateDersDto ders)
+        public async Task<ActionResult> AddDersAsync(CreateAndUpdateDersDto ders)
         {
             if (ders == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var Detail = await service.AddDersAsync(ders);
+          var Detail=   await service.AddDersAsync(ders);
             return Ok(Detail);
             
         }

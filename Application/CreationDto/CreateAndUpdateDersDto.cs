@@ -12,6 +12,6 @@ namespace Application.CreationDto
         [Range(1,10)]
         public int? Kredi { get; set; }
 
-        public int Hoca_No { get; set; }
+       
     }
 }

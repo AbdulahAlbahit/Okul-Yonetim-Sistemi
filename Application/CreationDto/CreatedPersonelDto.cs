@@ -22,5 +22,8 @@ namespace Application.CreationDto
         public JobTitle jobTitle { get; set; }
         [Required(ErrorMessage ="uzman alani null olamaz")]
         public string UzmanAlani { get; set; }
+
+        [Required(ErrorMessage ="hocanin hangi Dersin anlatigini atanmali")]
+        public int  DersId { get; set; }
     }
 }

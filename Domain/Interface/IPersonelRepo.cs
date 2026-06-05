@@ -12,6 +12,8 @@ namespace Domain.Interface
         Task<Personel> AddPersonel(Personel personel);
         Task UpdatePersonel(Personel personel);
         Task<bool> DeletePersonelById(int Id);
-
+        Task<List<Personel>> GetHocaByDersId(int dersId);
+        Task<List<Personel>> GetHocalarByDersIdAsync(List<int> dersId);
+       
     }
 }

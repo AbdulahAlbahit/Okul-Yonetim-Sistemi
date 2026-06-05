@@ -57,5 +57,17 @@ namespace Infrastructure.Repos
             return false;
 
         }
+
+        public async Task<List<Personel>> GetHocaByDersId(int dersId)
+        {
+            var hocalar= await context.Personels.Where(a=>a.DersId==dersId).AsNoTracking().ToListAsync();  
+            return hocalar;
+        }
+
+        public async Task<List<Personel>> GetHocalarByDersIdAsync(List<int> dersId)
+        {
+            var hocalar = await context.Personels.Where(a=>dersId.Contains(a.DersId)).AsNoTracking().ToListAsync();
+            return hocalar;
+        }
     }
 }

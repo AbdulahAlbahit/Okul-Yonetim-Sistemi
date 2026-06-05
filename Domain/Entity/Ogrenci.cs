@@ -14,13 +14,15 @@ namespace Domain.Entity
         public string SecondName {  get; set; }
         public int? age {  get; set; }
         public char sube { get; set; }
+        public bool hasPassword { get; set; } = false;
+
 
         public int Sinif_Id {  get; set; }
         public Sinif sinif { get; set; }
         public int Veli_Id {  get; set; }
         public Veli veli { get; set; }
-
-
+        public ICollection<OgrenciSinav> OgrenciSinavs {  get; set; }
+        public User User { get; set; }
 
     }
 }

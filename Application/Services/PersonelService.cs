@@ -58,7 +58,7 @@ namespace Application.Services
                 var PerDetail = mapper.Map<PersonelDetailDto>(personel);
                 return PerDetail;
             }
-            return null;
+            return new PersonelDetailDto();
 
 
         }
@@ -75,7 +75,7 @@ namespace Application.Services
                 return mapper.Map<PersonelDetailDto>(existingPersonel);
             }
 
-            return null;
+            return new PersonelDetailDto();
         }
     }
 }

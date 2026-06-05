@@ -11,17 +11,15 @@ namespace Domain.Entity
         [Key]
         public int Sinav_Id {  get; set; }
         public float Not {  get; set; }
+        public SinavType SinavType { get; set; }
         [ForeignKey("ders")]
 
         public int Ders_Id {  get; set; }
         public Ders ders {  get; set; }
-        [ForeignKey("ogrenci")]
-
-        public int Ogrenci_Id {  get; set; }    
-        public Ogrenci ogrenci { get; set; }
         [ForeignKey("personel")]
         public int Hoca_Id {  get; set; }
-        public Personel personel { get; set; }  
+        public Personel personel { get; set; }
+        public ICollection<OgrenciSinav> OgrenciSinavs { get; set; }
 
 
     }

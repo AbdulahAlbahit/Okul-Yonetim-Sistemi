@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260516150345_uzamanAlani_column")]
-    partial class uzamanAlani_column
+    [Migration("20260522105635_NewDatabase")]
+    partial class NewDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,17 +37,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Hoca_No")
-                        .HasColumnType("int");
-
                     b.Property<int?>("Kredi")
                         .HasColumnType("int");
 
                     b.HasKey("Ders_Id");
 
-                    b.HasIndex("Hoca_No");
-
-                    b.ToTable("Dersler");
+                    b.ToTable("Derss");
                 });
 
             modelBuilder.Entity("Domain.Entity.Ogrenci", b =>
@@ -64,7 +59,7 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Ogrenci_No")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SecondName")
                         .IsRequired()
@@ -73,17 +68,14 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Sinif_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Sinif_Id1")
-                        .HasColumnType("int");
-
                     b.Property<int>("Veli_Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Veli_Id1")
                         .HasColumnType("int");
 
                     b.Property<int?>("age")
                         .HasColumnType("int");
+
+                    b.Property<bool>("hasPassword")
+                        .HasColumnType("bit");
 
                     b.Property<string>("sube")
                         .IsRequired()
@@ -91,11 +83,37 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Sinif_Id1");
+                    b.HasIndex("Ogrenci_No")
+                        .IsUnique();
 
-                    b.HasIndex("Veli_Id1");
+                    b.HasIndex("Sinif_Id");
 
-                    b.ToTable("Ogrenciler");
+                    b.HasIndex("Veli_Id");
+
+                    b.ToTable("Ogrencis");
+                });
+
+            modelBuilder.Entity("Domain.Entity.OgrenciSinav", b =>
+                {
+                    b.Property<int>("Ogrenci_Sinav_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Ogrenci_Sinav_Id"));
+
+                    b.Property<int>("Ogrenci_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sinav_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("Ogrenci_Sinav_Id");
+
+                    b.HasIndex("Ogrenci_id");
+
+                    b.HasIndex("Sinav_id");
+
+                    b.ToTable("OgrenciSinavs");
                 });
 
             modelBuilder.Entity("Domain.Entity.Personel", b =>
@@ -106,6 +124,9 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PerId"));
 
+                    b.Property<int>("DersId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
@@ -115,7 +136,7 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("TC")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UzmanAlani")
                         .IsRequired()
@@ -135,6 +156,11 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("PerId");
 
+                    b.HasIndex("DersId");
+
+                    b.HasIndex("TC")
+                        .IsUnique();
+
                     b.ToTable("Personels");
                 });
 
@@ -146,8 +172,14 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Program_Id"));
 
-                    b.Property<DateOnly>("date")
-                        .HasColumnType("date");
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Per_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sinif_id")
+                        .HasColumnType("int");
 
                     b.Property<int>("ders_Id")
                         .HasColumnType("int");
@@ -157,9 +189,13 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Program_Id");
 
+                    b.HasIndex("Per_id");
+
+                    b.HasIndex("Sinif_id");
+
                     b.HasIndex("ders_Id");
 
-                    b.ToTable("Program");
+                    b.ToTable("Programs");
                 });
 
             modelBuilder.Entity("Domain.Entity.Sinav", b =>
@@ -179,7 +215,7 @@ namespace Infrastructure.Migrations
                     b.Property<float>("Not")
                         .HasColumnType("real");
 
-                    b.Property<int>("Ogrenci_Id")
+                    b.Property<int>("SinavType")
                         .HasColumnType("int");
 
                     b.HasKey("Sinav_Id");
@@ -188,9 +224,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("Hoca_Id");
 
-                    b.HasIndex("Ogrenci_Id");
-
-                    b.ToTable("Sinavlar");
+                    b.ToTable("Sinavs");
                 });
 
             modelBuilder.Entity("Domain.Entity.Sinif", b =>
@@ -201,20 +235,52 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sinif_Id"));
 
-                    b.Property<int>("Program_Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Program_Id1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SinifNo")
-                        .HasColumnType("int");
+                    b.Property<string>("SinifNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Sinif_Id");
 
-                    b.HasIndex("Program_Id1");
+                    b.ToTable("Sinifs");
+                });
 
-                    b.ToTable("Sinif");
+            modelBuilder.Entity("Domain.Entity.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("GirisNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Ogrenci_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("personel_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Ogrenci_id")
+                        .IsUnique()
+                        .HasFilter("[Ogrenci_id] IS NOT NULL");
+
+                    b.HasIndex("personel_id")
+                        .IsUnique()
+                        .HasFilter("[personel_id] IS NOT NULL");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Domain.Entity.Veli", b =>
@@ -242,31 +308,20 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Veli_Id");
 
-                    b.ToTable("Veli");
-                });
-
-            modelBuilder.Entity("Domain.Entity.Ders", b =>
-                {
-                    b.HasOne("Domain.Entity.Personel", "personel")
-                        .WithMany()
-                        .HasForeignKey("Hoca_No")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("personel");
+                    b.ToTable("Velis");
                 });
 
             modelBuilder.Entity("Domain.Entity.Ogrenci", b =>
                 {
                     b.HasOne("Domain.Entity.Sinif", "sinif")
-                        .WithMany()
-                        .HasForeignKey("Sinif_Id1")
+                        .WithMany("Ogrenciler")
+                        .HasForeignKey("Sinif_Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Entity.Veli", "veli")
-                        .WithMany()
-                        .HasForeignKey("Veli_Id1")
+                        .WithMany("Ogrenciler")
+                        .HasForeignKey("Veli_Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -275,13 +330,59 @@ namespace Infrastructure.Migrations
                     b.Navigation("veli");
                 });
 
+            modelBuilder.Entity("Domain.Entity.OgrenciSinav", b =>
+                {
+                    b.HasOne("Domain.Entity.Ogrenci", "Ogrenci")
+                        .WithMany("OgrenciSinavs")
+                        .HasForeignKey("Ogrenci_id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.Sinav", "Sinav")
+                        .WithMany("OgrenciSinavs")
+                        .HasForeignKey("Sinav_id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Ogrenci");
+
+                    b.Navigation("Sinav");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Personel", b =>
+                {
+                    b.HasOne("Domain.Entity.Ders", "Ders")
+                        .WithMany("Personels")
+                        .HasForeignKey("DersId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Ders");
+                });
+
             modelBuilder.Entity("Domain.Entity.Program", b =>
                 {
+                    b.HasOne("Domain.Entity.Personel", "Personel")
+                        .WithMany("Programs")
+                        .HasForeignKey("Per_id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.Sinif", "Sinif")
+                        .WithMany("programs")
+                        .HasForeignKey("Sinif_id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entity.Ders", "ders")
-                        .WithMany()
+                        .WithMany("Programs")
                         .HasForeignKey("ders_Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Personel");
+
+                    b.Navigation("Sinif");
 
                     b.Navigation("ders");
                 });
@@ -289,39 +390,81 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Sinav", b =>
                 {
                     b.HasOne("Domain.Entity.Ders", "ders")
-                        .WithMany()
+                        .WithMany("Sinavlar")
                         .HasForeignKey("Ders_Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Entity.Personel", "personel")
-                        .WithMany()
+                        .WithMany("Sinavs")
                         .HasForeignKey("Hoca_Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entity.Ogrenci", "ogrenci")
-                        .WithMany()
-                        .HasForeignKey("Ogrenci_Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ders");
 
-                    b.Navigation("ogrenci");
-
                     b.Navigation("personel");
+                });
+
+            modelBuilder.Entity("Domain.Entity.User", b =>
+                {
+                    b.HasOne("Domain.Entity.Ogrenci", "Ogrenci")
+                        .WithOne("User")
+                        .HasForeignKey("Domain.Entity.User", "Ogrenci_id")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entity.Personel", "Personel")
+                        .WithOne("User")
+                        .HasForeignKey("Domain.Entity.User", "personel_id")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Ogrenci");
+
+                    b.Navigation("Personel");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Ders", b =>
+                {
+                    b.Navigation("Personels");
+
+                    b.Navigation("Programs");
+
+                    b.Navigation("Sinavlar");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Ogrenci", b =>
+                {
+                    b.Navigation("OgrenciSinavs");
+
+                    b.Navigation("User")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entity.Personel", b =>
+                {
+                    b.Navigation("Programs");
+
+                    b.Navigation("Sinavs");
+
+                    b.Navigation("User")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entity.Sinav", b =>
+                {
+                    b.Navigation("OgrenciSinavs");
                 });
 
             modelBuilder.Entity("Domain.Entity.Sinif", b =>
                 {
-                    b.HasOne("Domain.Entity.Program", "program")
-                        .WithMany()
-                        .HasForeignKey("Program_Id1")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("Ogrenciler");
 
-                    b.Navigation("program");
+                    b.Navigation("programs");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Veli", b =>
+                {
+                    b.Navigation("Ogrenciler");
                 });
 #pragma warning restore 612, 618
         }

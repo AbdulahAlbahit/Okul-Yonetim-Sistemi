@@ -11,17 +11,17 @@ namespace Infrastructure.Repos
     {
         public async Task<Ders> AddDersAsync(Ders ders)
         {
-            context.Dersler.Add(ders);
+            context.Derss.Add(ders);
             await context.SaveChangesAsync();
             return ders;
         }
 
         public async Task<bool> DeleteDersAsync(int id)
         {
-           var ders=await GetDersByIdAsync(id);
+            var ders = await GetDersByIdAsync(id);
             if (ders != null)
             {
-                context.Dersler.Remove(ders);
+                context.Derss.Remove(ders);
                 await context.SaveChangesAsync();
                 return true;
             }
@@ -32,26 +32,32 @@ namespace Infrastructure.Repos
 
         public async Task<List<Ders>> GetAllDersAsync()
         {
-            var list = await context.Dersler.Include(a=>a.personel).AsNoTracking().ToListAsync();
+            var list = await context.Derss.Include(a => a.Personels).AsNoTracking().ToListAsync();
 
-           return list;
+            return list;
         }
 
         public async Task<Ders> GetDersByIdAsync(int id)
         {
-            var Ders = await context.Dersler.Include(a => a.personel).AsNoTracking().FirstOrDefaultAsync(a=>a.Ders_Id==id);
+            var Ders = await context.Derss.Include(a => a.Personels).AsNoTracking().FirstOrDefaultAsync(a => a.Ders_Id == id);
             return Ders;
         }
 
         public async Task<Ders> GetDersByName(string name)
         {
-            var ders = await context.Dersler.Include(a => a.personel).AsNoTracking().FirstOrDefaultAsync(a => a.DersAdi == name);
+            var ders = await context.Derss.Include(a => a.Personels).AsNoTracking().FirstOrDefaultAsync(a => a.DersAdi == name);
             return ders;
+        }
+
+        public async Task<List<Ders>> GetDerslerByIdsAsync(List<int> id)
+        {
+            var dersler = await context.Derss.Where(a => id.Contains(a.Ders_Id)).AsNoTracking().ToListAsync() ;
+            return dersler; 
         }
 
         public async Task UpdateDersAsync(Ders ders)
         {
-           context.Dersler.Update(ders);
+            context.Derss.Update(ders);
             await context.SaveChangesAsync();
         }
     }

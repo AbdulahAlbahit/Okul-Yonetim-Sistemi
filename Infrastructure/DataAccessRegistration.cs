@@ -1,4 +1,5 @@
-﻿using Domain.Interface;
+﻿using Application.Services;
+using Domain.Interface;
 using Infrastructure.Repos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,9 @@ namespace Infrastructure
             // services.AddScoped<IPersonelRepository, PersonelRepository>();
                 services.AddScoped<IPersonelRepo,PersonelRepo>();
                 services.AddScoped<IDersRepo,DersRepo>();
+                services.AddScoped<IVeliRepo,VeliRepo>();
+               services.AddScoped<IProgramRepo, ProgramRepo>();
+                services.AddScoped<ISinifRepo, SinifRepo>();
         }
     }
 }

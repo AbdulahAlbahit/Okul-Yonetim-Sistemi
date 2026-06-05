@@ -9,7 +9,7 @@ namespace Application.IServices
 
     {
 
-        Task<List<PersonelDetailDto>> GetAllPersonelsAsync();
+     Task<List<PersonelDetailDto>> GetAllPersonelsAsync();
 
     Task<PersonelDetailDto> AddPersonelAsync(CreatedPersonelDto createdPersonel);
     Task<PersonelDetailDto> GetPersonelByIdAsync(int id);

@@ -14,6 +14,6 @@ namespace Domain.Entity
         public string SecondName {  get; set; }
         public string phone {  get; set; }
         public string? email { get; set; }  
-
+        public ICollection<Ogrenci> Ogrenciler {  get; set; }  
     }
 }

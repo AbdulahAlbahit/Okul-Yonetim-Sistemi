@@ -12,9 +12,10 @@ namespace Domain.Entity
         public int Ders_Id {  get; set; }
         public string DersAdi {  get; set; }
         public int? Kredi {  get; set; }
-        [ForeignKey("personel")]
-        public int Hoca_No {  get; set; }
-        public Personel personel { get; set; }  
-
+   
+      public ICollection<Personel> Personels { get; set; }
+        public ICollection<Sinav> Sinavlar {  get; set; }   
+        public ICollection<Program> Programs { get; set; }  
+        
     }
 }
