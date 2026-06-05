@@ -7,19 +7,29 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Domain.Entity;
+using System.Runtime.CompilerServices;
 namespace Application.Services
 {
-    public class DersService(IDersRepo DersRepo,IMapper mapper,IPersonelService PerService ) : IDersService
+    public class DersService(IDersRepo DersRepo,IMapper mapper,IPersonelRepo PerRepo ): IDersService
     {
         public async Task<DersDetailDto> AddDersAsync(CreateAndUpdateDersDto ders)
         {
             var Ders = mapper.Map<Ders>(ders);
-             
-                 await DersRepo.AddDersAsync(Ders);
-            var hocaAdi =  PerService.GetPersonelByIdAsync(Ders.Hoca_No).Result.Name;
 
-            var Detail=mapper.Map<DersDetailDto>(Ders);
-            Detail.HocaAdi = hocaAdi;
+          var AddedDers=  await DersRepo.AddDersAsync(Ders);
+            var hocalar =  await PerRepo.GetHocaByDersId(AddedDers.Ders_Id);
+
+            var Detail = mapper.Map<DersDetailDto>(Ders);
+            if (hocalar != null)
+            {
+                for (int i = 0; i < hocalar.Count; i++)
+                {
+
+                    Detail.hocaBilgis[i].Hoca_no = hocalar[i].PerId;
+                    Detail.hocaBilgis[i].Hoca_name = hocalar[i].Name;
+
+                }
+            }
 
             return Detail;
 
@@ -37,18 +47,28 @@ namespace Application.Services
 
             var list = new List<DersDetailDto>();
 
-            var Dersler=await DersRepo.GetAllDersAsync();
-            if(Dersler != null)
+            var Dersler = await DersRepo.GetAllDersAsync();
+            if (Dersler != null)
             {
                 foreach (var item in Dersler)
                 {
                     var DersDetail = mapper.Map<DersDetailDto>(item);
-                    DersDetail.HocaAdi = item.personel.Name;
+                    var personels = item.Personels.Where(a => a.DersId == DersDetail.Ders_Id).ToList();
+                    if (personels != null)
+                    {
+                        for (int i=0;i<personels.Count;i++) {
+                            DersDetail.hocaBilgis.Add(new HocaBilgi());
+                            DersDetail.hocaBilgis[i].Hoca_no = personels[i].PerId;
+                            DersDetail.hocaBilgis[i].Hoca_name = personels[i].Name;
+                        
+                        }
+
+                    }
                     list.Add(DersDetail);
                 }
 
             }
-          
+
 
             return list;
 
@@ -62,12 +82,22 @@ namespace Application.Services
             if (Ders != null)
             {
                 var DersDetail = mapper.Map<DersDetailDto>(Ders);
-                DersDetail.HocaAdi = Ders.personel.Name;
+                var personels=Ders.Personels.Where(a=>a.DersId==Ders.Ders_Id).ToList();
+                if (personels != null)
+                {
+                    for (int i = 0; i < personels.Count; i++)
+                    {
+
+                        DersDetail.hocaBilgis[i].Hoca_no = personels[i].PerId;
+                        DersDetail.hocaBilgis[i].Hoca_name = personels[i].Name;
+
+                    }
+                }
                 return DersDetail;
-
-
             }
-            return null;
+
+
+            return new DersDetailDto();
         }
 
         public async Task<DersDetailDto> GetDersByName(string name)
@@ -77,31 +107,49 @@ namespace Application.Services
             if (ders != null)
             {
                 var Detail = mapper.Map<DersDetailDto>(ders);
-                Detail.HocaAdi = ders.personel.Name;
+                var personels = ders.Personels.Where(a => a.DersId == ders.Ders_Id).ToList();
+                if (personels != null)
+                {
+                    for (int i = 0; i < personels.Count; i++)
+                    {
 
+                        Detail.hocaBilgis[i].Hoca_no = personels[i].PerId;
+                        Detail.hocaBilgis[i].Hoca_name = personels[i].Name;
+
+                    }
+                }
                 return Detail;
             }
 
-            return null;
+            return new DersDetailDto(); ;
 
         }
 
-        public async Task<DersDetailDto> UpdateDersAsync(CreateAndUpdateDersDto ders,int id)
+        public async Task<DersDetailDto> UpdateDersAsync(CreateAndUpdateDersDto ders, int id)
         {
 
             var existingDers = await DersRepo.GetDersByIdAsync(id);
-            if(existingDers != null)
+            if (existingDers != null)
             {
                 mapper.Map(ders, existingDers);
 
                 await DersRepo.UpdateDersAsync(existingDers);
-                    var Detail=mapper.Map<DersDetailDto>(existingDers);
-                Detail.HocaAdi = existingDers.personel.Name;
+                var Detail = mapper.Map<DersDetailDto>(existingDers);
+                var personels = existingDers.Personels.Where(a => a.DersId == existingDers.Ders_Id).ToList();
+                if (personels != null)
+                {
+                    for (int i = 0; i < personels.Count; i++)
+                    {
 
+                        Detail.hocaBilgis[i].Hoca_no = personels[i].PerId;
+                        Detail.hocaBilgis[i].Hoca_name = personels[i].Name;
+
+                    }
+                }
                 return Detail;
             }
 
-            return null;
+            return new DersDetailDto(); ;
         }
     }
 }

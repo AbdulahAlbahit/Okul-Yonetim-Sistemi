@@ -11,7 +11,7 @@ namespace Infrastructure.Repos
     {
         public async Task<Veli> AddVeli(Veli veli)
         {
-           context.Veliler.Add(veli);
+           context.Velis.Add(veli);
             await context.SaveChangesAsync();
             return veli;
         }
@@ -20,7 +20,7 @@ namespace Infrastructure.Repos
         {
             var veli=await GetVeliById(id);
             if (veli != null) { 
-              context.Veliler.Remove(veli);
+              context.Velis.Remove(veli);
                 await context.SaveChangesAsync();
                 return true;
             }
@@ -30,19 +30,19 @@ namespace Infrastructure.Repos
 
         public async Task<List<Veli>> GetAllVeliAsync()
         {
-            return await context.Veliler.AsNoTracking().ToListAsync();
+            return await context.Velis.AsNoTracking().ToListAsync();
 
         }
 
         public async Task<Veli> GetVeliById(int id)
         {
-            return await context.Veliler.AsNoTracking().FirstOrDefaultAsync(a=>a.Veli_Id==id);
+            return await context.Velis.AsNoTracking().FirstOrDefaultAsync(a=>a.Veli_Id==id);
         }
 
       
         public async Task<Veli> UpdateVeli(Veli veli)
         {
-           context.Veliler.Update(veli);
+           context.Velis.Update(veli);
             await context.SaveChangesAsync();
             return veli;
         }

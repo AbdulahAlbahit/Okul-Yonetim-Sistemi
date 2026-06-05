@@ -14,8 +14,9 @@ namespace Application
         {
             // Kendi katmanındaki servisleri burada kaydet
             services.AddScoped<IPersonelService, PersonelService>();
-            services.AddScoped<IDersService, DersService>();
-
+           services.AddScoped<IDersService, DersService>();
+            services.AddScoped<IVeliService, VeliService>();
+       //    services.AddScoped<IProgramService, ProgramService> ();
             // Diğer bağımlılıklar...
         }
     }

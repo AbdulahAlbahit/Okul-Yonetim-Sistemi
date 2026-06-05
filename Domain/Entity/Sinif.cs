@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entity
 {
@@ -6,8 +7,9 @@ namespace Domain.Entity
     {
         [Key]
         public int Sinif_Id {  get; set; }
-        public int SinifNo {  get; set; }
-         public int Program_Id {  get; set; }
-        public Program program { get; set; }
+        public string SinifNo {  get; set; }
+      
+        public ICollection<Program> programs { get; set; }
+        public ICollection<Ogrenci> Ogrenciler { get; set; }
     }
 }

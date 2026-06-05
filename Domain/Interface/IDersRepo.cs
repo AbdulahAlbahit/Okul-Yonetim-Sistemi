@@ -14,6 +14,7 @@ namespace Domain.Interface
         Task<Ders> GetDersByIdAsync(int id);
         Task<List<Ders>> GetAllDersAsync();
         Task<Ders> GetDersByName(string name);
+        Task<List<Ders>> GetDerslerByIdsAsync(List<int> id);
 
     }
 }

@@ -19,7 +19,8 @@ namespace Application
             CreateMap<UpdatePersonelDto,Personel>().ReverseMap();
             CreateMap<Ders,CreateAndUpdateDersDto>().ReverseMap();
             CreateMap<Ders,DersDetailDto>().ReverseMap();
-            
+            CreateMap<Program, DetailDto.ProgramDetailDto>().ReverseMap();
+            CreateMap<Program, CreationDto.ProgramDto>().ReverseMap();
         }
 
 
