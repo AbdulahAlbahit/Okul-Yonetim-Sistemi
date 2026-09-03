@@ -98,6 +98,9 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Ogrenci_Sinav_Id"));
 
+                    b.Property<float>("Not")
+                        .HasColumnType("real");
+
                     b.Property<int>("Ogrenci_id")
                         .HasColumnType("int");
 
@@ -209,9 +212,6 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Hoca_Id")
                         .HasColumnType("int");
 
-                    b.Property<float>("Not")
-                        .HasColumnType("real");
-
                     b.Property<int>("SinavType")
                         .HasColumnType("int");
 
@@ -253,16 +253,18 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsFirstLogin")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("Ogrenci_id")
                         .HasColumnType("int");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
 
                     b.Property<int?>("personel_id")
                         .HasColumnType("int");

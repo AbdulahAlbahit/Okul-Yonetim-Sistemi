@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Domain.Entity;
@@ -6,7 +6,7 @@ using Domain.Interface;
 using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repos
 {
-    internal class PersonelRepo(AppDbContext context) : IPersonelRepo
+    internal class PersoneRepo(AppDbContext context) : IPersonelRepo
     {
 
 
@@ -27,7 +27,10 @@ namespace Infrastructure.Repos
         public async Task<Personel> GetPersonelByIdAsync(int id)
         {
             var personel = await context.Personels.FirstOrDefaultAsync(a => a.PerId == id);
+            if(personel!=null)
             return personel;
+
+            return new Personel();
 
         }
 

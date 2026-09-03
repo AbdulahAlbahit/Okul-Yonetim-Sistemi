@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,9 +10,10 @@ namespace Domain.Entity
     {
         [Key]
         public int Id { get; set; }
-        public string GirisNo {  get; set; }
-        public string Password {  get; set; }
-        public string Role {  get; set; }
+        public string GirisNo { get; set; }
+        public string PasswordHash { get; set; }
+        public Role Role { get; set; }
+        public bool IsFirstLogin { get; set; } = true;
 
         [ForeignKey("Ogrenci")]
         public int? Ogrenci_id {  get; set; }

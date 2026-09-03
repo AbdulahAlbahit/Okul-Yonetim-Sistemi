@@ -1,4 +1,4 @@
-﻿using Application.CreationDto;
+using Application.CreationDto;
 using Application.DetailDto;
 using Application.IServices;
 using AutoMapper;
@@ -37,15 +37,19 @@ namespace Application.Services
 
             var newList=new List<VeliDetailDto>();
 
-
-            foreach (var item in list)
+            if (list != null)
             {
-            var Detail=mapper.Map<VeliDetailDto>(list);
-             newList.Add(Detail);
+                foreach (var item in list)
+                {
+                    var Detail = mapper.Map<VeliDetailDto>(item);
+                    newList.Add(Detail);
+                }
+            return newList ;
+
+
             }
 
-
-            return newList ;
+            return new List<VeliDetailDto>();
 
 
         }
@@ -59,7 +63,7 @@ namespace Application.Services
                 return Detail ;
             }
 
-            return null;
+            return new VeliDetailDto() ;
 
         }
 
@@ -75,7 +79,7 @@ namespace Application.Services
 
                 return mapper.Map<VeliDetailDto>(existingVeli) ;
             }
-            return null;
+            return new VeliDetailDto() ;
 
         }
 

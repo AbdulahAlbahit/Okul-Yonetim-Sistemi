@@ -1,92 +1,86 @@
-﻿//using Application.CreationDto;
-//using Application.DetailDto;
-//using Application.IServices;
-//using Domain.Entity;
-//using Microsoft.AspNetCore.Mvc;
-//namespace WepApi.Controllers
-//{
-//    [ApiController]
-//    [Route("[controller]")]
-//    public class ProgramController(IProgramService service):ControllerBase
-//    {
+using Application.CreationDto;
+using Application.DetailDto;
+using Application.IServices;
+using Application.UpdateDto;
+using Domain.Entity;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-//        [HttpPost]
-//        [Route("")]
-//        public async Task<ActionResult<ProgramDataDto>>
-//            AddProgram(UpdateAndCreateProgramDto program,int Sinif_id)
-//        {
-//            if (program == null|| !ModelState.IsValid) 
-//                return BadRequest(ModelState);
-             
+namespace WepApi.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class ProgramController(IProgramService service) : ControllerBase
+    {
+        // 1. Oku: Tüm haftayı getir
+        [HttpGet("by-sinif/{sinifId:int}")]
+        public async Task<ActionResult<ProgramDataDto>> GetProgramBySinifId(int sinifId)
+        {
+            if (sinifId <= 0) return BadRequest("Geçersiz Sınıf ID");
 
-//            var programDetailDto = await service.AddProgramAsync(program,Sinif_id);
+            var programData = await service.GetProgramBySinifIdAsync(sinifId);
+            return programData;
+        }
 
-//            return programDetailDto;
+        // 2. Çoklu Yazma: Tüm haftayı baştan yarat (Eskileri siler)
+        [HttpPost("by-sinif/{sinifId:int}")]
+        public async Task<ActionResult<ProgramDataDto>> ReplaceWeeklyProgram(int sinifId, [FromBody] UpdateAndCreateProgramDto program)
+        {
+            if (!ModelState.IsValid || sinifId <= 0 || program == null)
+                return BadRequest(ModelState);
 
+            var result = await service.ReplaceWeeklyProgramAsync(sinifId, program);
+            return result;
+        }
 
-//        }
+        // 3. Bölgesel Yazma: Sadece 1 Günü baştan yarat (Diğer günlere dokunmaz)
+        [HttpPut("by-sinif/{sinifId:int}/day/{day}")]
+        public async Task<ActionResult<ProgramDataDto>> ReplaceDailyProgram(int sinifId, Days day, [FromBody] List<ProgramDto> dailyProgram)
+        {
+            if (!ModelState.IsValid || sinifId <= 0)
+                return BadRequest(ModelState);
 
-//        [HttpGet]
-//        [Route("")]
-//        public async Task<ActionResult<ProgramDataDto>> GetProgramByDay(Days day, int Sinif_id)
-//        {
-          
-//              if( Sinif_id<0)
-//                  return BadRequest();
-              
-//              var Program=await service.GetProgramByDayAsync(day, Sinif_id);
-//            if (Program == null)
-//                return NotFound();
+            var result = await service.ReplaceDailyProgramAsync(sinifId, day, dailyProgram);
+            return result;
+        }
 
+        // 4. Nokta Atışı Yazma: Sadece 1 Dersi (hücreyi) güncelle
+        [HttpPut("{programId:int}")]
+        public async Task<ActionResult<ProgramDetailDto>> UpdateSingleProgram(int programId, [FromBody] UpdateSingleProgramDto updateDto)
+        {
+            if (!ModelState.IsValid || programId <= 0)
+                return BadRequest(ModelState);
 
-//            return Program;
-//        }
+            var updatedProgram = await service.UpdateSingleProgramAsync(programId, updateDto);
+            if (updatedProgram == null)
+                return NotFound("Güncellenecek ders (program kaydı) bulunamadı.");
 
-//        [HttpPut]
-//        [Route("")]
-//        public async Task<ActionResult<ProgramDataDto>> UpdateProgramAtDay(List<ProgramDto> program, Days Day, int Sinif_id)
-//        {
-//            if(program == null|| !ModelState.IsValid || Sinif_id < 0)
-//            {
-//                 return BadRequest(ModelState);
-//            }
+            return updatedProgram;
+        }
 
-//            var result = await service.UpdateProgramAtDate(program, Day, Sinif_id);
+        // 5. Nokta Atışı Silme: Sadece 1 Dersi (hücreyi) sil
+        [HttpDelete("{programId:int}")]
+        public async Task<ActionResult> DeleteSingleProgram(int programId)
+        {
+            if (programId <= 0) return BadRequest("Geçersiz Program ID");
 
-//            if(result==null)
-//            {
-//                return BadRequest("islem de hata var");
+            var result = await service.DeleteSingleProgramAsync(programId);
+            if (!result) return NotFound("Silinecek ders bulunamadı.");
 
-//            }
+            return NoContent();
+        }
 
-//            return result;
+        // 6. Toplu Silme: Sınıfın tüm haftalık programını sil
+        [HttpDelete("by-sinif/{sinifId:int}")]
+        public async Task<ActionResult> DeleteAllProgramsBySinifId(int sinifId)
+        {
+            if (sinifId <= 0) return BadRequest("Geçersiz Sınıf ID");
 
+            var result = await service.DeleteAllProgramsBySinifIdAsync(sinifId);
+            if (!result) return BadRequest("Program silinirken bir hata oluştu.");
 
-//        }
-
-//        [HttpPut]
-//        [Route("UpdateAllProgram")]
-//        public async Task<ActionResult<ProgramDataDto>> UpdateProgram(UpdateAndCreateProgramDto program, int Sinif_id)
-//        {
-//            if (program == null || !ModelState.IsValid || Sinif_id < 0)
-//            {
-//                return BadRequest(ModelState);
-//            }
-
-//            var result = await service.UpdateProgram(program, Sinif_id);
-
-//            if (result == null)
-//            {
-//                return BadRequest("islem de hata var");
-
-//            }
-
-//            return result;
-
-
-//        }
-
-
-
-//    }
-//}
+            return NoContent();
+        }
+    }
+}

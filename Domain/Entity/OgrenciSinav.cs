@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,6 +17,8 @@ namespace Domain.Entity
         [ForeignKey("Sinav")]
         public int Sinav_id {  get; set; }
         public Sinav Sinav { get; set; }
+        
+        public float Not { get; set; }
     
     }
 }

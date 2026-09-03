@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,7 +10,6 @@ namespace Domain.Entity
     {
         [Key]
         public int Sinav_Id {  get; set; }
-        public float Not {  get; set; }
         public SinavType SinavType { get; set; }
         [ForeignKey("ders")]
 

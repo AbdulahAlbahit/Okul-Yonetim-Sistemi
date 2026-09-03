@@ -17,20 +17,9 @@ namespace Application.Services
             var Ders = mapper.Map<Ders>(ders);
 
           var AddedDers=  await DersRepo.AddDersAsync(Ders);
-            var hocalar =  await PerRepo.GetHocaByDersId(AddedDers.Ders_Id);
-
-            var Detail = mapper.Map<DersDetailDto>(Ders);
-            if (hocalar != null)
-            {
-                for (int i = 0; i < hocalar.Count; i++)
-                {
-
-                    Detail.hocaBilgis[i].Hoca_no = hocalar[i].PerId;
-                    Detail.hocaBilgis[i].Hoca_name = hocalar[i].Name;
-
-                }
-            }
-
+    
+            var Detail = mapper.Map<DersDetailDto>(AddedDers);
+          
             return Detail;
 
 
@@ -45,32 +34,17 @@ namespace Application.Services
         public async Task<List<DersDetailDto>> GetAllDersAsync()
         {
 
-            var list = new List<DersDetailDto>();
-
             var Dersler = await DersRepo.GetAllDersAsync();
             if (Dersler != null)
             {
-                foreach (var item in Dersler)
-                {
-                    var DersDetail = mapper.Map<DersDetailDto>(item);
-                    var personels = item.Personels.Where(a => a.DersId == DersDetail.Ders_Id).ToList();
-                    if (personels != null)
-                    {
-                        for (int i=0;i<personels.Count;i++) {
-                            DersDetail.hocaBilgis.Add(new HocaBilgi());
-                            DersDetail.hocaBilgis[i].Hoca_no = personels[i].PerId;
-                            DersDetail.hocaBilgis[i].Hoca_name = personels[i].Name;
-                        
-                        }
+                
+                var mappedlist=mapper.Map<List<DersDetailDto>>(Dersler);
 
-                    }
-                    list.Add(DersDetail);
-                }
-
+                return mappedlist;
             }
 
 
-            return list;
+            return new List<DersDetailDto>();
 
 
         }
@@ -82,23 +56,15 @@ namespace Application.Services
             if (Ders != null)
             {
                 var DersDetail = mapper.Map<DersDetailDto>(Ders);
-                var personels=Ders.Personels.Where(a=>a.DersId==Ders.Ders_Id).ToList();
-                if (personels != null)
-                {
-                    for (int i = 0; i < personels.Count; i++)
-                    {
-
-                        DersDetail.hocaBilgis[i].Hoca_no = personels[i].PerId;
-                        DersDetail.hocaBilgis[i].Hoca_name = personels[i].Name;
-
-                    }
-                }
                 return DersDetail;
+                }
+
+                return new DersDetailDto();
             }
 
 
-            return new DersDetailDto();
-        }
+           
+        
 
         public async Task<DersDetailDto> GetDersByName(string name)
         {
@@ -107,17 +73,7 @@ namespace Application.Services
             if (ders != null)
             {
                 var Detail = mapper.Map<DersDetailDto>(ders);
-                var personels = ders.Personels.Where(a => a.DersId == ders.Ders_Id).ToList();
-                if (personels != null)
-                {
-                    for (int i = 0; i < personels.Count; i++)
-                    {
-
-                        Detail.hocaBilgis[i].Hoca_no = personels[i].PerId;
-                        Detail.hocaBilgis[i].Hoca_name = personels[i].Name;
-
-                    }
-                }
+               
                 return Detail;
             }
 
@@ -135,17 +91,7 @@ namespace Application.Services
 
                 await DersRepo.UpdateDersAsync(existingDers);
                 var Detail = mapper.Map<DersDetailDto>(existingDers);
-                var personels = existingDers.Personels.Where(a => a.DersId == existingDers.Ders_Id).ToList();
-                if (personels != null)
-                {
-                    for (int i = 0; i < personels.Count; i++)
-                    {
-
-                        Detail.hocaBilgis[i].Hoca_no = personels[i].PerId;
-                        Detail.hocaBilgis[i].Hoca_name = personels[i].Name;
-
-                    }
-                }
+               
                 return Detail;
             }
 

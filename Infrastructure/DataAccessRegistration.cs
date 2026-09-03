@@ -1,4 +1,4 @@
-﻿using Application.Services;
+using Application.Services;
 using Domain.Interface;
 using Infrastructure.Repos;
 using Microsoft.EntityFrameworkCore;
@@ -20,11 +20,15 @@ namespace Infrastructure
 
             // Eğer Repository'leriniz varsa onları da burada kayıt edebilirsiniz:
             // services.AddScoped<IPersonelRepository, PersonelRepository>();
-                services.AddScoped<IPersonelRepo,PersonelRepo>();
+                services.AddScoped<IPersonelRepo,PersoneRepo>();
                 services.AddScoped<IDersRepo,DersRepo>();
                 services.AddScoped<IVeliRepo,VeliRepo>();
                services.AddScoped<IProgramRepo, ProgramRepo>();
                 services.AddScoped<ISinifRepo, SinifRepo>();
+                services.AddScoped<IOgrenciRepo, OgrenciRepo>();
+                services.AddScoped<ISinavRepo, SinavRepo>();
+                services.AddScoped<IOgrenciSinavRepo, OgrenciSinavRepo>();
+                services.AddScoped<IUserRepo, UserRepo>();
         }
     }
 }

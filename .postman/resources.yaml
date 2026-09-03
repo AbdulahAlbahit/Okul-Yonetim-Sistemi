@@ -1,0 +1,7 @@
+# Use this workspace to collaborate
+workspace:
+  id: 44d14741-8560-4ee4-8e00-2326aca7e9ea
+
+localResources:
+  specs:
+    - ../WepApi/obj/Debug/net10.0/EndpointInfo/WepApi.json

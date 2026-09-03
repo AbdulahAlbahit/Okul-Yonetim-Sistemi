@@ -1,4 +1,4 @@
-﻿using Application.CreationDto;
+using Application.CreationDto;
 using Application.DetailDto;
 using Application.IServices;
 using Application.UpdateDto;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 namespace Application.Services
 {
-    internal class PersonelService(IPersonelRepo repo,IMapper mapper) : IPersonelService
+    internal class PersonelService(IPersonelRepo repo, IAuthService authService, IMapper mapper) : IPersonelService
     {
         public async Task<PersonelDetailDto> AddPersonelAsync(CreatedPersonelDto createdPersonel)
         {
@@ -18,12 +18,12 @@ namespace Application.Services
 
             var yeniPer = await repo.AddPersonel(personel);
 
+            // Otomatik olarak bu personel için User hesabı oluştur
+            await authService.CreateUserForPersonelAsync(yeniPer);
+
             var detailDto = mapper.Map<PersonelDetailDto>(yeniPer);
 
-
             return detailDto;
-
-
         }
 
         public async Task<bool> DeletePersonelByIdAsync(int Id)

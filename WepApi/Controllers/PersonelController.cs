@@ -1,7 +1,7 @@
-﻿using Application.DetailDto;
+using Application.DetailDto;
 using Application.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.ResponseCaching;
 using Application.CreationDto;
 using Application.UpdateDto;
 
@@ -9,11 +9,13 @@ namespace WepApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class PersonelController(IPersonelService service):ControllerBase
     {
 
         [HttpPost]
         [Route("")]
+        [Authorize(Roles = "Mudur")]
         public async Task<ActionResult<PersonelDetailDto>>  AddPersonleAsync(CreatedPersonelDto personel)
         {
             if(personel == null|| !ModelState.IsValid) 
@@ -21,7 +23,7 @@ namespace WepApi.Controllers
           
             var per=await service.AddPersonelAsync(personel);
 
-            return Ok(per);
+            return per;
 
         }
 
@@ -34,7 +36,7 @@ namespace WepApi.Controllers
         {
             var personels=await service.GetAllPersonelsAsync();
             if(personels!=null)
-                return Ok(personels);
+                return personels;
 
             return NotFound("Personel bulunmadi");
         }
@@ -48,7 +50,7 @@ namespace WepApi.Controllers
 
 
             if (personel != null)
-                return Ok(personel);
+                return personel;
 
             return NotFound("Bu id ile bulunan bir personel yok");
 
@@ -57,6 +59,7 @@ namespace WepApi.Controllers
 
         [HttpPut]
         [Route("")]
+        [Authorize(Roles = "Mudur")]
         public async Task<ActionResult<PersonelDetailDto>> UpdatePersonelAsync(UpdatePersonelDto personel, int id)
         {
 
@@ -67,12 +70,13 @@ namespace WepApi.Controllers
             if (per == null)
                 return NotFound();
 
-            return Ok(per);
+            return per;
 
         }
 
         [HttpDelete]
         [Route("")]
+        [Authorize(Roles = "Mudur")]
         public async Task<ActionResult<bool>> DeletePersonelAsync(int id)
         {
             var Deleted = await service.DeletePersonelByIdAsync(id);

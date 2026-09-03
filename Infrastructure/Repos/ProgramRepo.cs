@@ -1,68 +1,79 @@
-﻿using Domain.Entity;
+using Domain.Entity;
 using Domain.Interface;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Repos
 {
     public class ProgramRepo(AppDbContext context) : IProgramRepo
     {
-        public async Task<List<Program>> AddProgramAsync(List<Program> program)
+        public async Task<Program> GetProgramByIdAsync(int programId)
         {
-            context.Programs.AddRange(program);
+            return await context.Programs
+                .Include(p => p.ders)
+                .Include(p => p.Personel)
+                .Include(p => p.Sinif)
+                .FirstOrDefaultAsync(p => p.Program_Id == programId);
+        }
+
+        public async Task<List<Program>> GetProgramBySinifIdAsync(int sinifId)
+        {
+            return await context.Programs
+                .Include(p => p.ders)
+                .Include(p => p.Personel)
+                .Include(p => p.Sinif)
+                .Where(p => p.Sinif_id == sinifId)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<List<Program>> GetProgramBySinifIdAndDayAsync(int sinifId, Days day)
+        {
+            return await context.Programs
+                .Include(p => p.ders)
+                .Include(p => p.Personel)
+                .Include(p => p.Sinif)
+                .Where(p => p.Sinif_id == sinifId && p.Day == day)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<List<Program>> AddProgramsAsync(List<Program> programs)
+        {
+            await context.Programs.AddRangeAsync(programs);
+            await context.SaveChangesAsync();
+            return programs;
+        }
+
+        public async Task<Program> UpdateProgramAsync(Program program)
+        {
+            context.Programs.Update(program);
             await context.SaveChangesAsync();
             return program;
         }
 
-        public async Task<bool> DeleteListProgramAsync(List<Program> programs)
+        public async Task<bool> DeleteProgramAsync(int programId)
         {
-            context.Programs.RemoveRange(programs);
-           
-                await    context.SaveChangesAsync();
+            var program = await context.Programs.FindAsync(programId);
+            if (program == null) return false;
+
+            context.Programs.Remove(program);
+            await context.SaveChangesAsync();
             return true;
         }
 
-        public Task<TimeOnly> GetDateOfDersByDersName(Days day, string name)
+        public async Task<bool> DeleteProgramsBySinifIdAsync(int sinifId)
         {
-            throw new NotImplementedException();
+            await context.Programs.Where(p => p.Sinif_id == sinifId).ExecuteDeleteAsync();
+            return true;
         }
 
-        public Task<string> GetDersNameByTimeAsync(Days day, TimeOnly time)
+        public async Task<bool> DeleteProgramsBySinifIdAndDayAsync(int sinifId, Days day)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<Program>> GetProgramAsync(int Sinif_id)
-        {
-            var program=await context.Programs.Where(a=>a.Sinif_id == Sinif_id) .AsNoTracking().ToListAsync();
-            return program;
-        }
-
-        public async Task<List<Program>> GetProgramByDayAsync(Days day, int Sinif_id)
-        {
-            var program = await context.Programs.Where(a => a.Day == day && a.Sinif_id == Sinif_id).AsNoTracking().ToListAsync() ;
-            return program ;
-        }
-
-        public async Task<List<Program>> UpdateProgram(List<Program> program)
-        {
-            context.Programs.UpdateRange(program);
-            await context.SaveChangesAsync();
-            return program;
-        }
-
-        public Task<Program> UpdateProgramAtDate(Program program, Days Day)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<Program>> UpdateProgramAtDate(List<Program> program)
-        {
-                       context.Programs.UpdateRange(program);
-                       await context.SaveChangesAsync(); 
-                         return program;
+            await context.Programs.Where(p => p.Sinif_id == sinifId && p.Day == day).ExecuteDeleteAsync();
+            return true;
         }
     }
 }
