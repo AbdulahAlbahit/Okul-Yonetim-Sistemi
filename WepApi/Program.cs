@@ -1,6 +1,7 @@
 using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -49,7 +50,11 @@ namespace WepApi
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             var app = builder.Build();
-
+               using (var scope = app.Services.CreateScope())
+         {
+                  var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>(); // Kendi DbContext sınıf adını yaz
+                 dbContext.Database.Migrate();
+        }
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
